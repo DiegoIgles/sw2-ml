@@ -1,0 +1,16 @@
+fastapi==0.115.0
+uvicorn==0.30.6
+python-dateutil==2.9.0.post0
+requests==2.32.3
+
+# Para Python < 3.13 (wheels estables)
+numpy==1.26.4; python_version < "3.13"
+pandas==2.2.2; python_version < "3.13"
+scikit-learn==1.5.2; python_version < "3.13"
+scipy==1.13.1; python_version < "3.13"
+
+# Para Python >= 3.13 (usa wheels modernos)
+numpy>=2.1; python_version >= "3.13"
+pandas>=2.2.3; python_version >= "3.13"
+scikit-learn>=1.6.0; python_version >= "3.13"
+scipy>=1.14.1; python_version >= "3.13"
