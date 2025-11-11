@@ -22,8 +22,26 @@ app.add_middleware(
 )
 
 @app.get("/health")
-def health():
-    return {"ok": True}
+async def health():
+    """Health endpoint, async-friendly for readiness/liveness probes.
+
+    Devuelve status y versión de la aplicación.
+    """
+    return {"status": "ok", "version": "1.0.0"}
+
+
+@app.get("/health/live")
+async def health_live():
+    """Liveness endpoint (compatible con algunos health checks externos).
+
+    Devuelve un pequeño payload con timestamp para diagnósticos básicos.
+    """
+    from datetime import datetime
+    return {
+        "status": "alive",
+        "timestamp": datetime.utcnow().isoformat() + "Z",
+        "service": "sw2-ml",
+    }
 
 # Rutas
 app.include_router(sup_router)

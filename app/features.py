@@ -91,6 +91,10 @@ def flatten_docs(docs: List[Dict[str, Any]]) -> pd.DataFrame:
     - created_at -> datetime64[ns] naive
     - size_mb, days_since_created
     """
+    # Defensive: si docs es None o vacío, devolver DataFrame vacío
+    if not docs:
+        return pd.DataFrame()
+
     rows = []
     for d in docs:
         filename_raw = (d.get("filename") or "").strip()

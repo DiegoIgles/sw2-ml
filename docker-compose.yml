@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  ml:
+    build: .
+    image: sw2-ml:local
+    container_name: sw2-ml
+    ports:
+      - "8010:8010"
+    environment:
+      - PLAZOS_ENDPOINT=http://mock-plazos:3000/plazos
+      - DOCS_ENDPOINT=http://mock-docs:8081/admin/documentos
+    depends_on:
+      - mock-plazos
+      - mock-docs
+
+  mock-gateway:
+    build: ./mock_gateway
+    image: mock-gateway:local
+    container_name: mock-gateway
+    ports:
+      - "8080:8080"
+    environment:
+      - ML_URL=http://ml:8010
+    depends_on:
+      - ml
+
+  mock-plazos:
+    image: curlimages/curl:7.90.0
+    container_name: mock-plazos
+    command: ["sh", "-c", "while true; do sleep 3600; done"]
+    # El servicio de mock real lo implementamos en mock endpoints abajo con 'mock-docs' (FastAPI)
+
+  mock-docs:
+    build: ./mock_gateway
+    image: mock-docs:local
+    container_name: mock-docs
+    environment:
+      - MODE=docs
+    ports:
+      - "8081:8081"

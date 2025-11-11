@@ -1,0 +1,13 @@
+services:
+  sw2-ml:
+    build: .
+    image: sw2-ml:local
+    container_name: sw2-ml-local
+    ports:
+      - "8010:8010"
+    environment:
+      # Usar rutas completas para que los checks apunten a los endpoints correctos
+      - EXPEDIENTES_URL=http://host.docker.internal:3000/plazos
+      - DOCUMENTOS_URL=http://host.docker.internal:8081/admin/documentos
+      - PORT=8010
+    restart: unless-stopped

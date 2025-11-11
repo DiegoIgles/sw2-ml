@@ -81,24 +81,30 @@ def _scale_fit_transform(X: pd.DataFrame) -> Tuple[np.ndarray, StandardScaler]:
 # -----------------------------
 # Modelo Autoencoder - PyTorch
 # -----------------------------
-class AE(nn.Module):
-    def __init__(self, d_in: int, h: int, bottleneck: int):
-        super().__init__()
-        self.encoder = nn.Sequential(
-            nn.Linear(d_in, h),
-            nn.ReLU(),
-            nn.Linear(h, bottleneck),
-        )
-        self.decoder = nn.Sequential(
-            nn.Linear(bottleneck, h),
-            nn.ReLU(),
-            nn.Linear(h, d_in),
-        )
+# Definimos la clase AE solo si torch está disponible. Si torch no está instalado
+# no se debe ejecutar código que haga referencia a `nn` ya que provocaría
+# NameError durante la importación del módulo (esto ocurría al arrancar en
+# contenedores sin PyTorch). La lógica de entrenamiento usa HAS_TORCH para
+# decidir qué backend usar.
+if HAS_TORCH:
+    class AE(nn.Module):
+        def __init__(self, d_in: int, h: int, bottleneck: int):
+            super().__init__()
+            self.encoder = nn.Sequential(
+                nn.Linear(d_in, h),
+                nn.ReLU(),
+                nn.Linear(h, bottleneck),
+            )
+            self.decoder = nn.Sequential(
+                nn.Linear(bottleneck, h),
+                nn.ReLU(),
+                nn.Linear(h, d_in),
+            )
 
-    def forward(self, x):
-        z = self.encoder(x)
-        out = self.decoder(z)
-        return out
+        def forward(self, x):
+            z = self.encoder(x)
+            out = self.decoder(z)
+            return out
 
 
 def _train_ae_torch(Xs: np.ndarray, hidden: int, bottleneck: int, epochs: int, lr: float) -> Tuple[np.ndarray, float]:
