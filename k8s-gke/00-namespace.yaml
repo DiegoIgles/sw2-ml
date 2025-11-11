@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: sw2-ml
+  labels:
+    app: ml-service
+    environment: production

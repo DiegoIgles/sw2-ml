@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ml-service-config
+  namespace: sw2-ml
+data:
+  PORT: "8010"
+  # Actualizar con las IPs reales cuando despliegues los otros servicios
+  PLAZOS_ENDPOINT: "http://129.212.136.101/plazos"
+  DOCS_ENDPOINT: "http://128.203.103.88/admin/documentos"
